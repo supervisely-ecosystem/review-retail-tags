@@ -1,0 +1,28 @@
+{
+  "name": "Review Retail Tags",
+  "type": "app",
+  "categories": [
+    "retail",
+    "tagging"
+  ],
+  "description": "Review and correct tags (supports multi-user mode)",
+  "docker_image": "supervisely/base-py-sdk:6.1.52",
+  "main_script": "src/main.py",
+  "gui_template": "src/gui.html",
+  "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "catalogPath": "",
+    "tagName": "",
+    "targetClassName": "",
+    "multiselectClassName": ""
+  },
+  "task_location": "workspace_tasks",
+  "isolate": true,
+  "headless": true,
+  "integrated_into": ["image_annotation_tool"],
+  "icon": "https://img.icons8.com/cotton/100/000000/barcode-approve--v1.png",
+  "icon_background": "#FFFFFF",
+  "context_menu": {
+    "target": ["images_project"]
+  }
+}
