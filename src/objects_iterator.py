@@ -4,6 +4,13 @@ import cache
 import references
 
 
+def get_by_id(ann: sly.Annotation, figure_id):
+    for idx, label in enumerate(ann.labels):
+        if label.geometry.sly_id == figure_id:
+            return label
+    return None
+
+
 def get_first_id(ann: sly.Annotation):
     for idx, label in enumerate(ann.labels):
         if label.obj_class.name == ag.target_class_name:
@@ -67,6 +74,19 @@ def prev_object(api: sly.Api, task_id, context, state, app_logger):
 @sly.timeit
 def next_object(api: sly.Api, task_id, context, state, app_logger):
     active_label = select_object(api, task_id, context, get_next_id, show_msg=True)
+    references.refresh_grid(context["userId"], get_label_tag(active_label))
+
+
+@ag.app.callback("manual_selected_figure_changed")
+@sly.timeit
+def obj_changed(api: sly.Api, task_id, context, state, app_logger):
+    active_figure_id = context["figureId"]
+    image_id = context["imageId"]
+    ann: sly.Annotation = cache.get_annotation(image_id)
+
+    active_label = None
+    if active_figure_id is not None:
+        active_label = get_by_id(ann, active_figure_id)
     references.refresh_grid(context["userId"], get_label_tag(active_label))
 
 
