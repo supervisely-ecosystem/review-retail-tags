@@ -5,7 +5,6 @@ import globals as ag  # application globals
 import catalog
 import references
 import objects_iterator
-import batches
 import tagging
 
 
@@ -29,10 +28,10 @@ def main():
     sly.logger.info("Initialize catalog ...")
     catalog.init()
     data["catalog"] = json.loads(catalog.df.to_json(orient="split"))
-    data["emptyGallery"] = batches.empty_gallery
+    data["emptyGallery"] = references.empty_gallery
 
     sly.logger.info("Initialize references ...")
-    references.init()
+    references.init(data, state)
 
     # sly.logger.info("Initialize batches ...")
     # batches.init(data, state)

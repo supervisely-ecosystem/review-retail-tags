@@ -1,12 +1,13 @@
 import supervisely_lib as sly
 import globals as ag
 import cache
+import references
 
 
 def get_first_id(ann: sly.Annotation):
     for idx, label in enumerate(ann.labels):
         if label.obj_class.name == ag.target_class_name:
-            return label.geometry.sly_id
+            return label
     return None
 
 
@@ -16,7 +17,7 @@ def get_prev_id(ann: sly.Annotation, active_figure_id):
         if label.geometry.sly_id == active_figure_id:
             if prev_idx is None:
                 return None
-            return ann.labels[prev_idx].geometry.sly_id
+            return ann.labels[prev_idx]
         if label.obj_class.name == ag.target_class_name:
             prev_idx = idx
 
@@ -29,11 +30,11 @@ def get_next_id(ann: sly.Annotation, active_figure_id):
             continue
         if need_search:
             if label.obj_class.name == ag.target_class_name:
-                return label.geometry.sly_id
+                return label
     return None
 
 
-def select_object(api: sly.Api, task_id, context, find_func, show_msg=False):
+def select_object(api: sly.Api, task_id, context, find_func, show_msg=False) -> sly.Label:
     user_id = context["userId"]
     image_id = context["imageId"]
     project_id = context["projectId"]
@@ -43,30 +44,36 @@ def select_object(api: sly.Api, task_id, context, find_func, show_msg=False):
 
     active_figure_id = context["figureId"]
     if active_figure_id is None:
-        active_figure_id = get_first_id(ann)
+        active_label = get_first_id(ann)
     else:
-        active_figure_id = find_func(ann, active_figure_id)
-        # if show_msg is True and active_figure_id is None:
-        #     api.app.set_field(task_id, "state.dialogVisible", True)
+        active_label = find_func(ann, active_figure_id)
 
-    if active_figure_id is not None:
+    if active_label is not None:
+        active_figure_id = active_label.geometry.sly_id
         api.img_ann_tool.set_figure(ann_tool_session, active_figure_id)
         api.img_ann_tool.zoom_to_figure(ann_tool_session, active_figure_id, 2)
 
-    return active_figure_id
+    return active_label
 
 
 @ag.app.callback("select_prev_object")
 @sly.timeit
 def prev_object(api: sly.Api, task_id, context, state, app_logger):
-    active_figure_id = select_object(api, task_id, context, get_prev_id)
-    context["figureId"] = active_figure_id
-    # _refresh_upc(api, task_id, context, state, app_logger)
+    active_label = select_object(api, task_id, context, get_prev_id)
+    references.refresh_grid(context["userId"], get_label_tag(active_label))
 
 
 @ag.app.callback("select_next_object")
 @sly.timeit
 def next_object(api: sly.Api, task_id, context, state, app_logger):
-    active_figure_id = select_object(api, task_id, context, get_next_id, show_msg=True)
-    context["figureId"] = active_figure_id
-    # _refresh_upc(api, task_id, context, state, app_logger)
+    active_label = select_object(api, task_id, context, get_next_id, show_msg=True)
+    references.refresh_grid(context["userId"], get_label_tag(active_label))
+
+
+def get_label_tag(label: sly.Label):
+    if label is None:
+        return None
+    for tag in label.tags:
+        if tag.meta.name == ag.tag_name:
+            return tag.value
+    return None

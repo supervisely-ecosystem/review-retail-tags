@@ -2,7 +2,6 @@ import supervisely_lib as sly
 import globals as ag
 import requests
 import cache
-import batches
 
 
 def assign(api, figure_id, tag_meta, tag_value, remove_duplicates=True):
