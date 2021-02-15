@@ -7,6 +7,10 @@
                description="Provide path in Team Files to the file with all reference items">
         <el-input v-model="state.referencePath"></el-input>
     </sly-field>
+    <sly-field title="Match catalog column"
+               description="CSV Column used to match product catalog item with image">
+        <el-input v-model="state.columnName"></el-input>
+    </sly-field>
     <sly-field title="Target class"
                description="Review only objects of selected class">
         <sly-select-class :project-id="context.projectId"

@@ -14,7 +14,8 @@
     "catalogPath": "",
     "tagName": "",
     "targetClassName": "",
-    "multiselectClassName": ""
+    "multiselectClassName": "",
+    "columnName": ""
   },
   "task_location": "workspace_tasks",
   "isolate": true,

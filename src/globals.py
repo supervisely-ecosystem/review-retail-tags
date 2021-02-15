@@ -18,6 +18,7 @@ project = None
 meta: sly.ProjectMeta = None
 reference_path = None
 catalog_path = None
+column_name = None
 target_class_name = None
 reference_tag_name = None
 multiselect_class_name = None
@@ -85,6 +86,11 @@ def init():
     catalog_path = os.environ["modal.state.catalogPath"]
     _empty_string_error(catalog_path, "CSV catalog path")
     sly.logger.info("catalog_path", extra={"catalog_path": catalog_path})
+
+    global column_name
+    column_name = os.environ['modal.state.columnName']
+    _empty_string_error(column_name, "Catalog column name")
+    sly.logger.info("column_name", extra={"column_name": column_name})
 
     global tag_name
     tag_name = os.environ["modal.state.tagName"]

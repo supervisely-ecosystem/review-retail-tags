@@ -3,6 +3,7 @@ import supervisely_lib as sly
 
 import globals as ag  # application globals
 import catalog
+import references
 import objects_iterator
 import batches
 import tagging
@@ -15,12 +16,11 @@ def main():
     data["user"] = {}
 
     data["catalog"] = {"columns": [], "data": []}
-    #data["ownerId"] = ag.owner_id
     data["targetProject"] = {"id": ag.project.id, "name": ag.project.name}
     data["currentMeta"] = {}
 
     state = {}
-    state["selectedTab"] = "references"
+    state["selectedTab"] = "review"
     state["targetClass"] = ag.target_class_name
     state["multiselectClass"] = ag.multiselect_class_name
     state["user"] = {}
@@ -31,8 +31,11 @@ def main():
     data["catalog"] = json.loads(catalog.df.to_json(orient="split"))
     data["emptyGallery"] = batches.empty_gallery
 
-    sly.logger.info("Initialize batches ...")
-    batches.init(data, state)
+    sly.logger.info("Initialize references ...")
+    references.init()
+
+    # sly.logger.info("Initialize batches ...")
+    # batches.init(data, state)
 
     ag.app.run(data=data, state=state)
 

@@ -89,8 +89,8 @@
                 </div>
             </div>
         </div>
-<!--        <el-tabs id="small_tabs" v-model="state.selectedTab">-->
-<!--            <el-tab-pane label="REFERENCES" name="references" class="ml5">-->
+        <el-tabs id="small_tabs" v-model="state.selectedTab">
+            <el-tab-pane label="REVIEW" name="review" class="ml5">
 <!--                <sly-grid-gallery-->
 <!--                        class="mr5"-->
 <!--                        v-show="data.userGrid.hasOwnProperty(context.userId)"-->
@@ -109,14 +109,14 @@
 <!--                        </div>-->
 <!--                    </template>-->
 <!--                </sly-grid-gallery>-->
-<!--            </el-tab-pane>-->
-<!--            <el-tab-pane label="CATALOG" name="catalog" class="ml5">-->
-<!--                <span slot="label"><i class="zmdi zmdi-view-list-alt"></i> CATALOG</span>-->
-<!--                <sly-table id="small_table"-->
-<!--                           :options="{perPage: 10, pageSizes: [5, 10, 20, 50, 100]}"-->
-<!--                           :content="data.catalog"-->
-<!--                ></sly-table>-->
-<!--            </el-tab-pane>-->
-<!--        </el-tabs>-->
+            </el-tab-pane>
+            <el-tab-pane label="CATALOG" name="catalog" class="ml5">
+                <span slot="label"><i class="zmdi zmdi-view-list-alt"></i> CATALOG</span>
+                <sly-table id="small_table"
+                           :options="{perPage: 10, pageSizes: [5, 10, 20, 50, 100]}"
+                           :content="data.catalog"
+                ></sly-table>
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </div>
