@@ -67,14 +67,16 @@ def select_object(api: sly.Api, task_id, context, find_func, show_msg=False) -> 
 @sly.timeit
 def prev_object(api: sly.Api, task_id, context, state, app_logger):
     active_label = select_object(api, task_id, context, get_prev_id)
-    references.refresh_grid(context["userId"], get_label_tag(active_label))
+    if active_label is not None:
+        references.refresh_grid(context["userId"], get_label_tag(active_label))
 
 
 @ag.app.callback("select_next_object")
 @sly.timeit
 def next_object(api: sly.Api, task_id, context, state, app_logger):
     active_label = select_object(api, task_id, context, get_next_id, show_msg=True)
-    references.refresh_grid(context["userId"], get_label_tag(active_label))
+    if active_label is not None:
+        references.refresh_grid(context["userId"], get_label_tag(active_label))
 
 
 @ag.app.callback("manual_selected_figure_changed")
