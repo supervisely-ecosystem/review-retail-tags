@@ -31,7 +31,7 @@ def init(data):
 def obj_changed(api: sly.Api, task_id, context, state, app_logger):
     user_id = context["userId"]
     selected_catalog_row = state["catalogSelection"]
-    if selected_catalog_row is None:
+    if selected_catalog_row is None or selected_catalog_row["selectedRowData"] is None:
         refresh_grid(user_id, None, "data.userCatalog")
     else:
         catalog_key = str(selected_catalog_row["selectedRowData"][ag.column_name])

@@ -2,6 +2,7 @@ import supervisely_lib as sly
 import globals as ag
 import requests
 import cache
+import references
 
 
 def assign(api, figure_id, tag_meta, tag_value, remove_duplicates=True):
@@ -26,12 +27,10 @@ def delete(api, figure_id, tag_meta, tag_value):
 
 def change_tag(api: sly.Api, task_id, context, state, app_logger, action_figure):
     tag_meta = ag.meta.get_tag_meta(ag.tag_name)
-    userId = context["userId"]
-    grid_key = state["selected"][str(userId)]
-
+    user_id = context["userId"]
     tag_value = None
-    if grid_key is not None:
-        tag_value = batches.figureId2Key[grid_key]
+    if state["catalogSelection"] is not None and state["catalogSelection"]["selectedRowData"] is not None:
+        tag_value = str(state["catalogSelection"]["selectedRowData"][ag.column_name])
 
     figure_id = context["figureId"]
     image_id = context["imageId"]
@@ -49,6 +48,10 @@ def change_tag(api: sly.Api, task_id, context, state, app_logger, action_figure)
                 continue
             if label.geometry.to_bbox().intersects_with(selected_label.geometry.to_bbox()):
                 action_figure(api, label.geometry.sly_id, tag_meta, tag_value)
+    if action_figure == assign:
+        references.refresh_grid(user_id, tag_value)
+    elif action_figure == delete:
+        references.refresh_grid(user_id, None)
 
 
 @ag.app.callback("assign_tag")

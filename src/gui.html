@@ -56,8 +56,8 @@
                             type="primary"
                             size="mini"
                             :disabled="context.figureId === null ||
-                                    ![state.targetClass, state.multiselectClass].includes(context.figureClassTitle) ||
-                                    !state.selected[context.userId]"
+                                      ![state.targetClass, state.multiselectClass].includes(context.figureClassTitle) ||
+                                      !(data.userCatalog.hasOwnProperty(context.userId) && data.userCatalog[context.userId] && data.refGrid[data.userCatalog[context.userId]])"
                             @click="command('assign_tag')">
                         <i class="zmdi zmdi-label mr5"></i> Tag
                     </el-button>
