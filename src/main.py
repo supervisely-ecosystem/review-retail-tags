@@ -24,17 +24,15 @@ def main():
     state["multiselectClass"] = ag.multiselect_class_name
     state["user"] = {}
     state["selected"] = {}
+    state["catalogSelection"] = None
 
     sly.logger.info("Initialize catalog ...")
-    catalog.init()
+    catalog.init(data)
     data["catalog"] = json.loads(catalog.df.to_json(orient="split"))
     data["emptyGallery"] = references.empty_gallery
 
     sly.logger.info("Initialize references ...")
     references.init(data, state)
-
-    # sly.logger.info("Initialize batches ...")
-    # batches.init(data, state)
 
     ag.app.run(data=data, state=state)
 

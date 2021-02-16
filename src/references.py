@@ -26,12 +26,16 @@ def init(data, state):
 
     ref_json = sly.json.load_json_file(local_path)
     for reference_key, ref_examples in ref_json["references"].items():
+        if len(ref_examples) >= 2:
+            cnt_grid_columns = 2
+        else:
+            cnt_grid_columns = 1
 
         review_gallery = {
             "content": {
                 "projectMeta": ag.gallery_meta.to_json(),
                 "annotations": {},
-                "layout": [[] for i in range(2)]
+                "layout": [[] for i in range(cnt_grid_columns)]
             },
             "previewOptions": ag.image_preview_options,
             "options": ag.image_grid_options,
@@ -55,10 +59,9 @@ def init(data, state):
                 },
                 "catalogInfo": catalog_info
             }
-            review_gallery["content"]["layout"][idx % 2].append(figure_id)
+            review_gallery["content"]["layout"][idx % cnt_grid_columns].append(figure_id)
 
         reference_gallery[reference_key] = review_gallery
-
 
     sly.logger.info(f"Number of items in catalog: {len(catalog.index)}")
     sly.logger.info(f"Number of references: {len(reference_gallery)}")
@@ -68,8 +71,20 @@ def init(data, state):
     state["selected"] = {}
 
 
-def refresh_grid(user_id, reference_key):
+def refresh_grid(user_id, reference_key, field="data.userRef"):
     fields = [
-        {"field": "data.userRef", "payload": {user_id: reference_key}, "append": True}
+        {"field": field, "payload": {user_id: reference_key}, "append": True}
     ]
     ag.api.task.set_fields(ag.task_id, fields)
+
+
+@ag.app.callback("show_catalog_selection")
+@sly.timeit
+def obj_changed(api: sly.Api, task_id, context, state, app_logger):
+    user_id = context["userId"]
+    selected_catalog_row = state["catalogSelection"]
+    if selected_catalog_row is None:
+        refresh_grid(user_id, None, "data.userCatalog")
+    else:
+        catalog_key = str(selected_catalog_row["selectedRowData"][ag.column_name])
+        refresh_grid(user_id, catalog_key, "data.userCatalog")

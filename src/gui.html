@@ -91,14 +91,17 @@
         </div>
         <el-tabs id="small_tabs" v-model="state.selectedTab">
             <el-tab-pane label="REVIEW" name="review" class="ml5">
+                <div v-show="!(data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId] && data.refGrid[data.userRef[context.userId]])">
+                    No references
+                </div>
                 <sly-grid-gallery
                         class="mr5"
-                        v-show="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId]"
+                        v-show="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId] && data.refGrid[data.userRef[context.userId]]"
                         v-model="state.selected[context.userId]"
-                        :content="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId]
+                        :content="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId] && data.refGrid[data.userRef[context.userId]]
                                   ? data.refGrid[data.userRef[context.userId]].content
                                   : data.emptyGallery.content"
-                        :options="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId]
+                        :options="data.userRef.hasOwnProperty(context.userId) && data.userRef[context.userId] && data.refGrid[data.userRef[context.userId]]
                                   ? data.refGrid[data.userRef[context.userId]].options
                                   : data.emptyGallery.options"
                 >
@@ -115,7 +118,31 @@
                 <sly-table id="small_table"
                            :options="{perPage: 10, pageSizes: [5, 10, 20, 50, 100]}"
                            :content="data.catalog"
+                           @input="state.catalogSelection = $event; command('show_catalog_selection')"
                 ></sly-table>
+<!--                v-model="state.selected[context.userId]"-->
+
+                <div class="mt15"
+                     v-show="!(data.userCatalog.hasOwnProperty(context.userId) && data.userCatalog[context.userId] && data.refGrid[data.userCatalog[context.userId]])">
+                    No references
+                </div>
+                <sly-grid-gallery
+                        class="mr5"
+                        v-show="data.userCatalog.hasOwnProperty(context.userId) && data.userCatalog[context.userId] && data.refGrid[data.userCatalog[context.userId]]"
+                        :content="data.userCatalog.hasOwnProperty(context.userId) && data.userCatalog[context.userId] && data.refGrid[data.userCatalog[context.userId]]
+                                  ? data.refGrid[data.userCatalog[context.userId]].content
+                                  : data.emptyGallery.content"
+                        :options="data.userCatalog.hasOwnProperty(context.userId) && data.userCatalog[context.userId] && data.refGrid[data.userCatalog[context.userId]]
+                                  ? data.refGrid[data.userCatalog[context.userId]].options
+                                  : data.emptyGallery.options"
+                >
+                    <template v-slot:card-footer="{ annotation }">
+                        <div class="mt5" style="color: green; font-weight: 500;">CATALOG INFO:</div>
+                        <div v-for="v,k in annotation.catalogInfo">
+                            <b style="color: #777777;">{{k}}</b>:{{v}}
+                        </div>
+                    </template>
+                </sly-grid-gallery>
             </el-tab-pane>
         </el-tabs>
     </div>

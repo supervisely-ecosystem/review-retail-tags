@@ -15,9 +15,10 @@ def _build_catalog_index():
     index = {str(row[ag.column_name]): row for row in records}
 
 
-def init():
+def init(data):
     global df
     local_path = os.path.join(ag.app.data_dir, ag.catalog_path.lstrip("/"))
     ag.api.file.download(ag.team_id, ag.catalog_path, local_path)
     df = pd.read_csv(local_path)
     _build_catalog_index()
+    data["userCatalog"] = {}
