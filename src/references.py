@@ -76,15 +76,3 @@ def refresh_grid(user_id, reference_key, field="data.userRef"):
         {"field": field, "payload": {user_id: reference_key}, "append": True}
     ]
     ag.api.task.set_fields(ag.task_id, fields)
-
-
-@ag.app.callback("show_catalog_selection")
-@sly.timeit
-def obj_changed(api: sly.Api, task_id, context, state, app_logger):
-    user_id = context["userId"]
-    selected_catalog_row = state["catalogSelection"]
-    if selected_catalog_row is None:
-        refresh_grid(user_id, None, "data.userCatalog")
-    else:
-        catalog_key = str(selected_catalog_row["selectedRowData"][ag.column_name])
-        refresh_grid(user_id, catalog_key, "data.userCatalog")

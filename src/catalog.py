@@ -2,6 +2,8 @@ import json
 import pandas as pd
 import os
 import globals as ag
+import supervisely_lib as sly
+from references import refresh_grid
 
 df = None
 index = None
@@ -22,3 +24,15 @@ def init(data):
     df = pd.read_csv(local_path)
     _build_catalog_index()
     data["userCatalog"] = {}
+
+
+@ag.app.callback("show_catalog_selection")
+@sly.timeit
+def obj_changed(api: sly.Api, task_id, context, state, app_logger):
+    user_id = context["userId"]
+    selected_catalog_row = state["catalogSelection"]
+    if selected_catalog_row is None:
+        refresh_grid(user_id, None, "data.userCatalog")
+    else:
+        catalog_key = str(selected_catalog_row["selectedRowData"][ag.column_name])
+        refresh_grid(user_id, catalog_key, "data.userCatalog")
