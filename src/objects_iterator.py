@@ -47,6 +47,8 @@ def select_object(api: sly.Api, task_id, context, find_func, show_msg=False) -> 
     project_id = context["projectId"]
     ann_tool_session = context["sessionId"]
 
+    if image_id is None:
+        return None
     ann = cache.get_annotation(image_id)
 
     active_figure_id = context["figureId"]
