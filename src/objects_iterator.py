@@ -86,11 +86,13 @@ def next_object(api: sly.Api, task_id, context, state, app_logger):
 def obj_changed(api: sly.Api, task_id, context, state, app_logger):
     active_figure_id = context["figureId"]
     image_id = context["imageId"]
-    ann: sly.Annotation = cache.get_annotation(image_id)
 
     active_label = None
-    if active_figure_id is not None:
-        active_label = get_by_id(ann, active_figure_id)
+    if image_id is not None:
+        ann: sly.Annotation = cache.get_annotation(image_id)
+        if active_figure_id is not None:
+            active_label = get_by_id(ann, active_figure_id)
+
     references.refresh_grid(context["userId"], get_label_tag(active_label))
 
 
