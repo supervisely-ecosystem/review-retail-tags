@@ -34,5 +34,9 @@ def obj_changed(api: sly.Api, task_id, context, state, app_logger):
     if selected_catalog_row is None or selected_catalog_row["selectedRowData"] is None:
         refresh_grid(user_id, None, "data.userCatalog")
     else:
-        catalog_key = str(selected_catalog_row["selectedRowData"][ag.column_name])
+        catalog_key = selected_catalog_row["selectedRowData"].get(ag.column_name)
+        if catalog_key is not None:
+            catalog_key = str(catalog_key)
+        else:
+            app_logger.warning("Selected row in catalog", extra={"selected_catalog_row": selected_catalog_row})
         refresh_grid(user_id, catalog_key, "data.userCatalog")
