@@ -6,9 +6,10 @@ import references
 
 
 def assign(api, figure_id, tag_meta, tag_value, remove_duplicates=True):
-    if remove_duplicates is True:
-        delete(api, figure_id, tag_meta, tag_value)
-    api.advanced.add_tag_to_object(tag_meta.sly_id, figure_id, tag_value)
+    if tag_value is not None and tag_value != "":
+        if remove_duplicates is True:
+            delete(api, figure_id, tag_meta, tag_value)
+        api.advanced.add_tag_to_object(tag_meta.sly_id, figure_id, tag_value)
 
 
 def delete(api, figure_id, tag_meta, tag_value):
