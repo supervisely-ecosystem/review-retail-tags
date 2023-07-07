@@ -23,7 +23,7 @@
   "integrated_into": [
     "image_annotation_tool"
   ],
-  "icon": "https://img.icons8.com/cotton/100/000000/barcode-approve--v1.png",
+  "icon": "https://github.com/supervisely-ecosystem/review-retail-tags/assets/48245050/64afcb56-c021-45b3-b04b-26753505b7de)",
   "icon_background": "#FFFFFF",
   "context_menu": {
     "target": [
