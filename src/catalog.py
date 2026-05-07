@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import os
 import globals as ag
-import supervisely_lib as sly
+import supervisely as sly
 from references import refresh_grid
 
 df = None
